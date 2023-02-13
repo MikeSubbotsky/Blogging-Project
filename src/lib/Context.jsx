@@ -3,6 +3,7 @@ import React from 'react';
 
 export const UserLogin = React.createContext({});
 export const TweetsArray = React.createContext({});
+export const IsLoading = React.createContext({});
 
 
 export const darkTheme = createTheme({

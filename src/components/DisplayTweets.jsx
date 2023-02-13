@@ -1,13 +1,16 @@
+import { CircularProgress } from '@mui/material';
 import React, { useContext } from 'react';
-import { TweetsArray } from '../lib/Context';
+import { IsLoading, TweetsArray } from '../lib/Context';
 import Tweet from './Tweet';
 
 function DisplayTweets() {
   const { tweetsArray } = useContext(TweetsArray);
+  const { isLoading } = useContext(IsLoading);
 
   return (
     <div>
-      {Array.isArray(tweetsArray.tweetsArray) && [...tweetsArray.tweetsArray].reverse().map((tweet, index) => (
+      {isLoading && <CircularProgress color="inherit" />}
+      {Array.isArray(tweetsArray.tweetsArray) && tweetsArray.tweetsArray.map((tweet, index) => (
         <Tweet key={index} tweet={tweet} />
       ))}
     </div>

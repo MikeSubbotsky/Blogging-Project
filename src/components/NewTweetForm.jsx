@@ -1,23 +1,28 @@
 import React, { useContext, useState } from 'react'
 import { TextField, Button, Box } from '@mui/material'
-import { TweetsArray, UserLogin } from '../lib/Context';
+import { IsLoading, TweetsArray, UserLogin } from '../lib/Context';
+import { postTweet } from '../lib/Helper';
 
 
 function NewTweetForm() {
   const { dispatch } = useContext(TweetsArray);
   const { userLogin } = useContext(UserLogin)
   const [newTweetText, setNewTweetText] = useState('');
+  const { isLoading, setIsLoading } = useContext(IsLoading)
   
   
   function submitTweet() {
+    const tweetData = {
+      content: newTweetText,
+      userName: userLogin,
+      date: new Date().toISOString(),
+    }
     dispatch({
       type: 'ADD_TWEET',
-      payload: {
-        content: newTweetText,
-        userName: userLogin,
-        date: new Date().toISOString(),
-      },
+      payload: tweetData,
     });
+
+    postTweet(tweetData, setIsLoading);
     setNewTweetText('');
   }
   
@@ -34,7 +39,7 @@ function NewTweetForm() {
         />  
         <Button 
         className='position-absolute' 
-        disabled={newTweetText.length > 140 || newTweetText.length === 0 ? true : false}  
+        disabled={newTweetText.length > 140 || newTweetText.length === 0 || isLoading ? true : false}  
         variant="contained" 
         onClick={() => submitTweet()} 
         sx={{ 

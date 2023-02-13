@@ -3,7 +3,7 @@ const tweetReducer = (state, action) => {
       case 'ADD_TWEET':
         return {
           ...state,
-          tweetsArray: [...state.tweetsArray, action.payload],
+          tweetsArray: [action.payload, ...state.tweetsArray],
         };
 
         case 'SET_TWEETS':
@@ -17,12 +17,7 @@ const tweetReducer = (state, action) => {
             ...state,
             tweetsArray: [],
           };
-
-      // case 'DELETE_TWEET':
-      //   return {
-      //     ...state,
-      //     tweetsArray: state.tweetsArray.filter((tweet, index) => index !== action.payload),
-      //   };
+          
       default:
         return state;
     }

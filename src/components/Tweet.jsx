@@ -6,7 +6,10 @@ function Tweet({ tweet }) {
   return (
     <Card className='my-3 d-flex flex-column mx-auto' sx={{ width: "600px"}}>
       <div className='d-flex justify-content-between mx-3 mt-1 text-secondary'>
-        <Typography className=''>{tweet.userName}</Typography>
+        <div className='d-flex'>
+          <img src={tweet.avatarUrl} style={{ borderRadius: '50%' }}></img>
+          <Typography sx={{ml: 1}}>{tweet.userName}</Typography>
+        </div>
         <Typography>{moment(tweet.date).format('MMMM Do YYYY, H:mm')}</Typography>
       </div>
       <CardContent>

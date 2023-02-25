@@ -4,6 +4,9 @@ import React from 'react';
 export const UserLogin = React.createContext({});
 export const TweetsArray = React.createContext({});
 export const IsLoading = React.createContext({});
+export const IsLoggedIn = React.createContext({});
+export const UserID = React.createContext({});
+
 
 
 export const darkTheme = createTheme({

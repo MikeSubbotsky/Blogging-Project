@@ -12,9 +12,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { IsLoggedIn, UserID, UserLogin } from '../lib/Context';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { db } from '../lib/firebase';
-import { collection, doc, getDoc } from 'firebase/firestore/lite';
+import { collection, doc, getDoc } from 'firebase/firestore';
 
 function LoginPage() {
   const { setUserID } = useContext(UserID);
@@ -30,16 +30,20 @@ function LoginPage() {
     const auth = getAuth();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      // User is authenticated, redirect to tweets page
       const user = userCredential.user;
             setIsLoggedIn(true);
             setUserID(user.uid);
             const userDoc = doc(collection(db, "users"), user.uid);
             const userData = await getDoc(userDoc);
-            setUserLogin(userData.data().name);
-            navigate('/home');
+            if (userData && userData.data() && userData.data().name) {
+              setUserLogin(userData.data().name);
+              navigate('/home');
+            } else {
+              navigate('/profile');
+            }
     } catch (error) {
-      console.log('Error creating user:', error);
+      console.log('Login error:', error);
+      alert('Login error:', error);
     }
   };
 
@@ -53,10 +57,15 @@ function LoginPage() {
             setUserID(user.uid);
             const userDoc = doc(collection(db, "users"), user.uid);
             const userData = await getDoc(userDoc);
-            setUserLogin(userData.data().name);
-            navigate('/home');
+            if (userData && userData.data() && userData.data().name) {
+              setUserLogin(userData.data().name);
+              navigate('/home');
+            } else {
+              navigate('/profile');
+            }
     } catch (error) {
       console.log(error);
+      alert('Login error:', error);
     }
   };
 
@@ -129,9 +138,9 @@ function LoginPage() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <NavLink to="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
-              </Link>
+              </NavLink>
             </Grid>
           </Grid>
         </Box>

@@ -1,12 +1,11 @@
 import  { db } from './firebase';
-import { collection, addDoc, getDocs, orderBy, query, getDoc, doc, limit} from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs, orderBy, query, getDoc, doc, limit} from 'firebase/firestore';
 
-export async function getTweetsArray(dispatchData, setLoading = () => {}) {
+export async function getTweetsArray(dispatchData, setLoading = () => {}, numberOfTweets = 10) {
   setLoading(true);
   try {
-
     const tweetsCol = collection(db, 'tweets');
-    const q = query(tweetsCol, orderBy('date', 'desc'));
+    const q = query(tweetsCol, orderBy('date', 'desc'), limit(numberOfTweets));
     const snapshot = await getDocs(q);
 
     const tweets = await Promise.all(snapshot.docs.map(async id => {

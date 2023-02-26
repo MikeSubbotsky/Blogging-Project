@@ -1,17 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { UserLogin, UserID } from '../lib/Context';
 import { Button, TextField } from '@mui/material';
-import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 
 
 function ProfilePage() {
-  const { userLogin } = useContext(UserLogin);
+  const { userLogin, setUserLogin } = useContext(UserLogin);
   const { userID } = useContext(UserID);
   const [loginInput, setLoginInput] = useState(userLogin);
 
-  
 
     async function saveUserName() {
       
@@ -19,8 +18,11 @@ function ProfilePage() {
       const usersCol = collection(db, "users");
       const userRef = doc(usersCol, userID);
       await setDoc(userRef, { name: loginInput });
+      setUserLogin(loginInput);
+      alert('Name Saved')
   } catch (error) {
     console.error('Error setting user name:', error);
+    alert('Error setting user name:', error)
   }
     }
 
@@ -35,6 +37,7 @@ function ProfilePage() {
       const avatarUrl = generateRandomAvatarUrl();
       const userDocRef = doc(db, 'users', userID);
       await setDoc(userDocRef, { avatarUrl }, { merge: true });
+      alert('Avatar Generated');
     }
 
   return (

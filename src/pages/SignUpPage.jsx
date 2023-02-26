@@ -1,16 +1,17 @@
 import React, {useState, useContext} from 'react'
-import { IsLoggedIn, UserID } from '../lib/Context';
+import { IsLoggedIn, UserID, UserLogin } from '../lib/Context';
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { db } from '../lib/firebase';
+import { collection, doc, getDoc } from 'firebase/firestore';
 
 
 
@@ -18,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 function SignUpPage() {
     const { setIsLoggedIn } = useContext(IsLoggedIn);
     const { setUserID } = useContext(UserID);
+    const { setUserLogin } = useContext(UserLogin);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const auth = getAuth();
@@ -32,12 +34,10 @@ const handleSubmitSignUp = async (event) => {
     const user = userCredential.user;
     setIsLoggedIn(true);
     setUserID(user.uid);
-
-    
-
     navigate('/profile');
   } catch (error) {
     console.log(error);
+    alert('Sign up error:', error);
   }
 };
 
@@ -48,13 +48,21 @@ const handleSubmitSignUp = async (event) => {
         try {
             const userCredential = await signInWithPopup(auth, provider);
             const user = userCredential.user;
-            setIsLoggedIn(true);
-            setUserID(user.uid);
-            navigate('/profile');
-        } catch (error) {
-          console.log(error);
-        }
-      };
+                  setIsLoggedIn(true);
+                  setUserID(user.uid);
+                  const userDoc = doc(collection(db, "users"), user.uid);
+                  const userData = await getDoc(userDoc);
+                  if (userData && userData.data() && userData.data().name) {
+                    setUserLogin(userData.data().name);
+                    navigate('/home');
+                  } else {
+                    navigate('/profile');
+                  }
+          } catch (error) {
+            console.log(error);
+            alert('Login error:', error);
+          }
+        };
     
     return (
         <>
@@ -120,9 +128,9 @@ const handleSubmitSignUp = async (event) => {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <NavLink to="/login" variant="body2">
                                     Already have an account? Sign in
-                                </Link>
+                                </NavLink>
                             </Grid>
                         </Grid>
           </Box>

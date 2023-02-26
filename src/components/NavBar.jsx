@@ -1,7 +1,7 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { IsLoggedIn, UserID } from '../lib/Context';
+import { IsLoggedIn, UserID, UserLogin } from '../lib/Context';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function NavBar () {
   const { isLoggedIn, setIsLoggedIn } = useContext(IsLoggedIn);
   const { setUserID } = useContext(UserID);
+  const { userLogin, setUserLogin } = useContext(UserLogin);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function NavBar () {
     setIsLoggedIn(false);
     setUserID("");
     navigate('/login');
+    setUserLogin("");
   } catch (error) {
     console.log(error);
   }
@@ -37,6 +39,7 @@ function NavBar () {
         {isLoggedIn ? (
           <>
             <button className="btn btn-secondary m-2" onClick={handleLogout}>Logout</button>
+            {userLogin && <div className='m-2'> Welcome {userLogin}</div>}
           </>
         ) : (
           <>

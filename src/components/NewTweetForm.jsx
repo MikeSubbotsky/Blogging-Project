@@ -1,12 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { TextField, Button, Box } from '@mui/material'
-import { IsLoading, TweetsArray, UserID, UserLogin } from '../lib/Context';
+import { IsLoading, UserID } from '../lib/Context';
 import { postTweet } from '../lib/Helper';
 
 
 function NewTweetForm() {
-  const { dispatch } = useContext(TweetsArray);
-  const { userLogin } = useContext(UserLogin)
+
   const [newTweetText, setNewTweetText] = useState('');
   const { isLoading, setIsLoading } = useContext(IsLoading);
   const { userID } = useContext(UserID);
@@ -18,11 +17,6 @@ function NewTweetForm() {
       userID: userID,
       date: new Date().toISOString(),
     }
-    dispatch({
-      type: 'ADD_TWEET',
-      payload: tweetData,
-    });
-
     postTweet(tweetData, setIsLoading);
     setNewTweetText('');
   }

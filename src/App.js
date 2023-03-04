@@ -33,11 +33,6 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  
-
-  // useEffect(() => {
-  //   localStorage.setItem('userLogin', userLogin);
-  // }, [userLogin]);
 
   return (
     <ThemeProvider theme={darkTheme}>
